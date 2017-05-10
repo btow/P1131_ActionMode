@@ -6,13 +6,17 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import static android.view.ActionMode.*;
+import static android.widget.AbsListView.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    ActionMode actionMode;
+    private ActionMode actionMode;
     private Callback callback;
+    private ListView lvActionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,45 @@ public class MainActivity extends AppCompatActivity {
                 actionMode = null;
             }
         };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_activated_1,
+                getResources().getStringArray(R.array.data));
+
+        lvActionMode = (ListView) findViewById(R.id.lvActionMode);
+        lvActionMode.setAdapter(adapter);
+        lvActionMode.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lvActionMode.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.context, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                mode.finish();
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                String message = "position = " + position + ", checked = " + checked;
+                Messager.sendToAllRecipients(getBaseContext(), message);
+            }
+        });
     }
 
     @Override
