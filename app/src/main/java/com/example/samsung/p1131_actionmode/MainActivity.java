@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.context, menu);
+                mode.getMenuInflater().inflate(R.menu.context, menu );
                 return true;
             }
 
